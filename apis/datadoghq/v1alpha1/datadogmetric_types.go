@@ -10,6 +10,16 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// DatadogMetricBulk defines whether and how to handle queries with potentially large,
+// structured results.
+type DatadogMetricBulk struct {
+	// IndexKeys indicates the keys to index the results on, for retrieval against the
+	// selectors used in the external metrics API.
+	IndexKeys []string `json:"indexKeys,omitempty"`
+	// Enable bulk handling, or use regular single-value handling.
+	Enable bool `json:"enable,omitempty"`
+}
+
 // DatadogMetricSpec defines the desired state of DatadogMetric
 type DatadogMetricSpec struct {
 	// Query is the raw datadog query
@@ -23,6 +33,9 @@ type DatadogMetricSpec struct {
 	// TimeWindow provides the time window for the metric query, defaults to MaxAge.
 	// +optional
 	TimeWindow metav1.Duration `json:"timeWindow,omitempty"`
+	// Bulk queries will have a (potentially large) structured
+	// result set.
+	Bulk DatadogMetricBulk `json:"bulk,omitempty"`
 }
 
 // DatadogMetricStatus defines the observed state of DatadogMetric
